@@ -14,6 +14,10 @@ let isExpanding = false;
 let time = 0;
 let isMobile = false;
 
+// Audio state
+let audio, musicToggle, musicIcon;
+let audioStarted = false;
+
 init();
 
 async function init() {
@@ -38,6 +42,7 @@ async function init() {
         createPhotoParticles();
         window.addEventListener('resize', onWindowResize, false);
         setupUI();
+        setupAudio();
         animate();
 
     } catch (e) {
@@ -200,6 +205,45 @@ function setupUI() {
     fusionBtn.addEventListener('mouseleave', end);
     fusionBtn.addEventListener('touchstart', start, { passive: false });
     fusionBtn.addEventListener('touchend', end, { passive: false });
+
+    // Link audio start to the first interaction with the main button
+    const startAudioOnce = () => {
+        if (!audioStarted && audio) {
+            audio.play().catch(e => console.warn("Autoplay block:", e));
+            audioStarted = true;
+            fusionBtn.removeEventListener('mousedown', startAudioOnce);
+            fusionBtn.removeEventListener('touchstart', startAudioOnce);
+        }
+    };
+    fusionBtn.addEventListener('mousedown', startAudioOnce);
+    fusionBtn.addEventListener('touchstart', startAudioOnce);
+}
+
+function setupAudio() {
+    audio = document.getElementById('bg-music');
+    musicToggle = document.getElementById('music-toggle');
+    musicIcon = document.getElementById('music-icon');
+
+    if (!musicToggle || !audio) return;
+
+    // Set initial volume to a lower level (30%)
+    audio.volume = 0.3;
+
+    musicToggle.addEventListener('click', () => {
+        audio.muted = !audio.muted;
+        if (audio.muted) {
+            musicIcon.textContent = '🔇';
+            musicToggle.classList.add('muted');
+        } else {
+            musicIcon.textContent = '🔊';
+            musicToggle.classList.remove('muted');
+            // If user clicks toggle before "PRESIONE", start playback
+            if (!audioStarted) {
+                audio.play();
+                audioStarted = true;
+            }
+        }
+    });
 }
 
 function onWindowResize() {

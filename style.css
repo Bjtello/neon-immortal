@@ -81,6 +81,43 @@ body {
     letter-spacing: 2px;
 }
 
+.music-btn {
+    background: transparent;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(5, 217, 232, 0.3);
+    pointer-events: auto;
+}
+
+.music-btn:hover {
+    background: var(--secondary-color);
+    color: #000;
+    box-shadow: 0 0 20px var(--secondary-color);
+}
+
+.music-btn.muted {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(255, 42, 109, 0.3);
+}
+
+.music-btn.muted:hover {
+    background: var(--primary-color);
+    color: #000;
+    box-shadow: 0 0 20px var(--primary-color);
+}
+
 .control-group {
     margin-bottom: 25px;
 }
