@@ -52,9 +52,11 @@ function createPhotoParticles() {
     scene.add(mainGroup);
 
     const photoPaths = [
-        'assets/photos/d205c5a8c07194d85afb95921b3719bb.jpg',
-        'assets/photos/feliz-san-valentin-150-imagenes-y-frases-para-enviar_795af111_240206130838_1280x720.jpg',
-        'assets/photos/images.png'
+        'assets/photos/photo1.jpg',
+        'assets/photos/photo2.jpg',
+        'assets/photos/photo3.jpg',
+        'assets/photos/photo4.jpg',
+        'assets/photos/photo5.jpg'
     ];
 
     // 1. Crear partículas inmediatamente con fondo rojo (Fallback cuadrado)
