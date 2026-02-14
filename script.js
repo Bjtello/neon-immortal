@@ -205,6 +205,17 @@ function setupUI() {
     fusionBtn.addEventListener('mouseleave', end);
     fusionBtn.addEventListener('touchstart', start, { passive: false });
     fusionBtn.addEventListener('touchend', end, { passive: false });
+
+    // Link audio start EXPLICITLY to the 'PRESIONE' button
+    const startAudioOnButton = () => {
+        if (!audioStarted && audio) {
+            audio.play().then(() => {
+                audioStarted = true;
+            }).catch(e => console.warn("Error al iniciar audio desde el botón:", e));
+        }
+    };
+    fusionBtn.addEventListener('mousedown', startAudioOnButton);
+    fusionBtn.addEventListener('touchstart', startAudioOnButton);
 }
 
 function setupAudio() {
