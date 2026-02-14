@@ -205,18 +205,6 @@ function setupUI() {
     fusionBtn.addEventListener('mouseleave', end);
     fusionBtn.addEventListener('touchstart', start, { passive: false });
     fusionBtn.addEventListener('touchend', end, { passive: false });
-
-    // Link audio start to the first interaction with the main button
-    const startAudioOnce = () => {
-        if (!audioStarted && audio) {
-            audio.play().catch(e => console.warn("Autoplay block:", e));
-            audioStarted = true;
-            fusionBtn.removeEventListener('mousedown', startAudioOnce);
-            fusionBtn.removeEventListener('touchstart', startAudioOnce);
-        }
-    };
-    fusionBtn.addEventListener('mousedown', startAudioOnce);
-    fusionBtn.addEventListener('touchstart', startAudioOnce);
 }
 
 function setupAudio() {
@@ -229,7 +217,33 @@ function setupAudio() {
     // Set initial volume to a lower level (30%)
     audio.volume = 0.3;
 
-    musicToggle.addEventListener('click', () => {
+    // 1. Intentar reproducir inmediatamente (puede fallar por políticas del navegador)
+    const playAttempt = audio.play();
+    if (playAttempt !== undefined) {
+        playAttempt.then(() => {
+            audioStarted = true;
+        }).catch(error => {
+            console.log("Autoplay bloqueado. Esperando interacción...");
+        });
+    }
+
+    // 2. Listener GLOBAL para la primera interacción (clic o toque en cualquier parte)
+    const startAudioOnInteraction = () => {
+        if (!audioStarted && audio) {
+            audio.play().then(() => {
+                audioStarted = true;
+                // Una vez que suena, quitamos los listeners globales
+                window.removeEventListener('click', startAudioOnInteraction);
+                window.removeEventListener('touchstart', startAudioOnInteraction);
+            }).catch(e => console.warn("Error en interacción:", e));
+        }
+    };
+
+    window.addEventListener('click', startAudioOnInteraction);
+    window.addEventListener('touchstart', startAudioOnInteraction);
+
+    musicToggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evitar que el clic en el botón active el listener global si ya se manejó
         audio.muted = !audio.muted;
         if (audio.muted) {
             musicIcon.textContent = '🔇';
@@ -237,7 +251,6 @@ function setupAudio() {
         } else {
             musicIcon.textContent = '🔊';
             musicToggle.classList.remove('muted');
-            // If user clicks toggle before "PRESIONE", start playback
             if (!audioStarted) {
                 audio.play();
                 audioStarted = true;
