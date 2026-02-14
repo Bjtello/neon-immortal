@@ -1,4 +1,4 @@
-// Neon Immortal - VERSIÓN DEFINITIVA (Fotos Cuadradas + Rotación Automática)
+// Neon Immortal - VERSIÓN FINAL ORO (Fotos en Corazón + Rotación Automática)
 
 const CONFIG = {
     particleCount: 150,
